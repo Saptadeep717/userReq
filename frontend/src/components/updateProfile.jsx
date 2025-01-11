@@ -24,6 +24,8 @@ const UpdateProfile = () => {
           withCredentials: true, 
         }
       );
+      setLocation("");
+      setInterests([]);
       alert("Profile Updated");
     } catch (error) {
       console.error(error);

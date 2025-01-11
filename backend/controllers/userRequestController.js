@@ -213,7 +213,7 @@ exports.getRecommendations = async (req, res) => {
         user.location &&
         targetUser.location.toLowerCase() === user.location.toLowerCase()
       ) {
-        score += 2; // Give more weight if the location matches
+        score += 5; // Give more weight if the location matches
       }
 
       const commonInterests = targetUser.interests.filter((interest) =>
@@ -224,7 +224,7 @@ exports.getRecommendations = async (req, res) => {
       );
       score += commonInterests.length; // Increase score by the number of common interests
       if (declinedRequestIds.includes(targetUser.id.toString())) {
-        score -= 1000; // Apply a large penalty to push them to the bottom
+        score -= 100; // Apply a large penalty to push them to the bottom
       }
 
       return score;
@@ -247,7 +247,8 @@ exports.getRecommendations = async (req, res) => {
           score: score,
         };
       })
-      .sort((a, b) => b.score - a.score); // Sort by the score in descending order
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6); // Sort by the score in descending order
 
     res.json(recommendations);
   } catch (err) {
