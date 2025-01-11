@@ -5,8 +5,8 @@ const FriendRequest = require("../models/request.model");
 exports.sendFriendRequest = async (req, res) => {
   const { receiverId } = req.body;
   const senderId = req.user.id;
-  console.log("senderId",senderId);
-  console.log("receiverId",receiverId);
+  console.log("senderId", senderId);
+  console.log("receiverId", receiverId);
   try {
     const sender = await User.findById(senderId);
     const receiver = await User.findById(receiverId);
@@ -15,45 +15,43 @@ exports.sendFriendRequest = async (req, res) => {
       return res.status(404).json({ msg: "Receiver not found" });
     }
 
-     if (senderId === receiverId) {
-       return res.status(400).json({
-         msg: "You cannot send a friend request to yourself.",
-       });
-     }else{
-       // Check if already friends
-       if (sender.friends.includes(receiverId)) {
-         return res
-           .status(400)
-           .json({ msg: "You are already friends with this user" });
-       }
+    if (senderId === receiverId) {
+      return res.status(400).json({
+        msg: "You cannot send a friend request to yourself.",
+      });
+    } else {
+      // Check if already friends
+      if (sender.friends.includes(receiverId)) {
+        return res
+          .status(400)
+          .json({ msg: "You are already friends with this user" });
+      }
 
-       // Check for existing friend request (both directions)
-       const existingRequest = await FriendRequest.findOne({
-         $or: [
-           { sender: senderId, receiver: receiverId, status: "pending" },
-           { sender: receiverId, receiver: senderId, status: "pending" },
-         ],
-       });
+      // Check for existing friend request (both directions)
+      const existingRequest = await FriendRequest.findOne({
+        $or: [
+          { sender: senderId, receiver: receiverId, status: "pending" },
+          { sender: receiverId, receiver: senderId, status: "pending" },
+        ],
+      });
 
-       if (existingRequest) {
-         return res.status(400).json({ msg: "Friend request already exists" });
-       }
+      if (existingRequest) {
+        return res.status(400).json({ msg: "Friend request already exists" });
+      }
 
-       const friendRequest = new FriendRequest({
-         sender: senderId,
-         receiver: receiverId,
-       });
+      const friendRequest = new FriendRequest({
+        sender: senderId,
+        receiver: receiverId,
+      });
 
-       await friendRequest.save();
-       res.json({ msg: "Friend request sent successfully", friendRequest });
-     }
-
+      await friendRequest.save();
+      res.json({ msg: "Friend request sent successfully", friendRequest });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 };
-
 
 // Accept Friend Request
 exports.acceptFriendRequest = async (req, res) => {
@@ -199,20 +197,17 @@ exports.getRecommendations = async (req, res) => {
           : req.sender.toString()
       );
 
-    // Function to calculate recommendation score
     const calculateRecommendationScore = (targetUser) => {
       let score = 0;
 
-      // Check for mutual friends
       const mutualFriends = targetUser.friends.filter((friend) =>
         user.friends.some(
           (userFriend) => userFriend.id.toString() === friend.id.toString()
         )
       );
 
-      score += mutualFriends.length; // Increase score by the number of mutual friends
+      score += mutualFriends.length; // Increase score by  mutual friends
 
-      // Check if they share the same location
       if (
         targetUser.location &&
         user.location &&
@@ -221,7 +216,6 @@ exports.getRecommendations = async (req, res) => {
         score += 2; // Give more weight if the location matches
       }
 
-      // Check if they share any common interests
       const commonInterests = targetUser.interests.filter((interest) =>
         user.interests.some(
           (userInterest) =>
@@ -229,15 +223,13 @@ exports.getRecommendations = async (req, res) => {
         )
       );
       score += commonInterests.length; // Increase score by the number of common interests
-       if (declinedRequestIds.includes(targetUser.id.toString())) {
-         score -= 1000; // Apply a large penalty to push them to the bottom
-       }
-
+      if (declinedRequestIds.includes(targetUser.id.toString())) {
+        score -= 1000; // Apply a large penalty to push them to the bottom
+      }
 
       return score;
     };
 
-    // Map users to their recommendation score and sort them based on the score
     const recommendations = allUsers
       .filter(
         (u) =>
@@ -246,7 +238,7 @@ exports.getRecommendations = async (req, res) => {
             (friend) => friend.id.toString() === u.id.toString()
           ) &&
           !pendingRequestIds.includes(u.id)
-      ) // Exclude the current user
+      )
       .map((u) => {
         u.password = undefined;
         const score = calculateRecommendationScore(u);
@@ -264,7 +256,6 @@ exports.getRecommendations = async (req, res) => {
   }
 };
 
-
 exports.getFriends = async (req, res) => {
   const userId = req.user.id;
 
@@ -278,40 +269,32 @@ exports.getFriends = async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    res.json({ 
+    res.json({
       //user: user,
-      friends: user.friends });
+      friends: user.friends,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 };
 
-
-
-
-
-
 // Update User Profile (location and interests)
 exports.updateProfile = async (req, res) => {
-  const userId = req.user.id; // Get the userId from the JWT token
+  const userId = req.user.id;
 
-  // Destructure location and interests from the request body
   const { location, interests } = req.body;
 
   try {
-    // Find the user by userId
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    // Update the user's location and interests
-    if (location && typeof location === "string") user.location = location; // Update location if provided
-    if (interests && Array.isArray(interests)) user.interests = interests; // Update interests if provided
+    if (location && typeof location === "string") user.location = location;
+    if (interests && Array.isArray(interests)) user.interests = interests;
 
-    // Save the updated user
     await user.save();
 
     res.json({ msg: "Profile updated successfully", user });
@@ -321,11 +304,10 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-
 // Unfriend a friend
 exports.unfriend = async (req, res) => {
-  const { friendId } = req.body; // The friend's ID you want to unfriend
-  const userId = req.user.id;    // The logged-in user's ID
+  const { friendId } = req.body;
+  const userId = req.user.id;
 
   try {
     const user = await User.findById(userId);
@@ -339,7 +321,6 @@ exports.unfriend = async (req, res) => {
     user.friends = user.friends.filter((id) => id.toString() !== friendId);
     friend.friends = friend.friends.filter((id) => id.toString() !== userId);
 
-    // Save the updated users
     await user.save();
     await friend.save();
 
@@ -350,57 +331,47 @@ exports.unfriend = async (req, res) => {
   }
 };
 
-
 exports.searchUsers = async (req, res) => {
-  const userId = req.user.id; // Logged-in user's ID
-
+  const userId = req.user.id;
   try {
-    const { query } = req.query; // Search query (can be name, email, etc.)
+    const { query } = req.query;
 
-    // Search for users by name or other criteria
     const users = await User.find({
-      name: { $regex: query, $options: "i" }, // Case-insensitive search
-    }).select("name location interests friends"); // Select relevant fields
+      name: { $regex: query, $options: "i" },
+    }).select("name location interests friends");
 
-    // Check the status of each user (friend, pending request, etc.)
     const usersWithStatus = await Promise.all(
       users.map(async (user) => {
-        // Check if the logged-in user is friends with the searched user
         const isFriend = user.friends.includes(userId);
 
-        // Check for pending friend requests (both incoming and outgoing)
         const pendingRequest = await FriendRequest.findOne({
           $or: [
-            { sender: userId, receiver: user._id, status: "pending" }, // Outgoing request
-            { sender: user._id, receiver: userId, status: "pending" }, // Incoming request
+            { sender: userId, receiver: user._id, status: "pending" }, // outgoing req
+            { sender: user._id, receiver: userId, status: "pending" }, // incoming req
           ],
         });
 
-        // Determine if it's an outgoing request or incoming request
-        let requestStatus = "Not friends"; // Default status
+        let requestStatus = "Not friends";
         if (isFriend) {
-          requestStatus = "You are friends."; // Already friends
+          requestStatus = "You are friends.";
         } else if (pendingRequest) {
           if (pendingRequest.sender.toString() === userId.toString()) {
-            // Outgoing request (user sent the request)
             requestStatus = "Request Sent Already";
           } else {
-            // Incoming request (user received the request)
             requestStatus = "Friend request pending.";
           }
         }
 
         return {
           user,
-          requestStatus, // This will contain the correct status message
+          requestStatus,
         };
       })
     );
 
-    res.json(usersWithStatus); // Return the users with friend status
+    res.json(usersWithStatus);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 };
-
