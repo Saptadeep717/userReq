@@ -8,7 +8,7 @@ const LoginSignup = ({ setUser }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const navigate = useNavigate(); // Replacing useHistory
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ const LoginSignup = ({ setUser }) => {
       sessionStorage.setItem("username", response.data.user.name);
 
       setUser(response.data.user);
-      navigate("/home"); // Replacing history.push
+      navigate("/home"); 
     } catch (error) {
       alert(error.response.data.message);
       setPassword("");
