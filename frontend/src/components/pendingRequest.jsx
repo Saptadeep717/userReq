@@ -9,9 +9,9 @@ const PendingRequests = ({ requests = [], isCount, setIsCount}) => {
         { requestId: requestId },
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Include Bearer token in the Authorization header
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`, 
           },
-          withCredentials: true, // Optional, depending on how you're handling cookies
+          withCredentials: true, 
         }
       );
 

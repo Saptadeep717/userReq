@@ -1,4 +1,4 @@
-/* :root {
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -69,94 +69,6 @@ button:focus-visible {
  
 
 
-  */
+  
 
-  :root {
-  --primary-color: #4CAF50; /* Accent color */
-  --secondary-color: #333;  /* Text color */
-  --background-color: #fff; /* Background color */
-  --button-bg-color: #4CAF50;
-  --button-hover-bg-color: #45a049;
-  --border-color: #ccc;     /* Border color */
-  --input-bg-color: #f9f9f9;
-  --input-focus-bg-color: #e7f7e7;
-}
-
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: var(--background-color);
-}
-
-.form-container {
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: var(--secondary-color);
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid var(--border-color);
-  background-color: var(--input-bg-color);
-  font-size: 1rem;
-  outline: none;
-  transition: background-color 0.3s ease;
-}
-
-input:focus {
-  background-color: var(--input-focus-bg-color);
-  border-color: var(--primary-color);
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  background-color: var(--button-bg-color);
-  color: white;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
-}
-
-button:hover {
-  background-color: var(--button-hover-bg-color);
-}
-
-button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-.toggle-btn {
-  background: none;
-  border: none;
-  color: var(--primary-color);
-  font-size: 0.9rem;
-  margin-top: 15px;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.toggle-btn:hover {
-  color: var(--secondary-color);
-}
+ 

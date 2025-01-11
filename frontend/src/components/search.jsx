@@ -5,9 +5,8 @@ const SearchUsers = ({isCount,setIsCount}) => {
   const [query, setQuery] = useState(""); 
   const [users, setUsers] = useState([]); 
   const [loading, setLoading] = useState(false); 
-  const [searchPerformed, setSearchPerformed] = useState(false); // Track if a search was performed
-
-  // Handle input change
+  const [searchPerformed, setSearchPerformed] = useState(false); 
+  
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setQuery(value);
@@ -15,16 +14,16 @@ const SearchUsers = ({isCount,setIsCount}) => {
     // Clear search results if query is empty
     if (!value.trim()) {
       setUsers([]);
-      setSearchPerformed(false); // Reset search state
+      setSearchPerformed(false); 
     }
   };
 
-  // Fetch users based on search query
+ 
   const handleSearch = async () => {
-    if (!query.trim()) return; // Prevent empty searches
+    if (!query.trim()) return; 
 
     setLoading(true);
-    setSearchPerformed(true); // Mark that a search has been performed
+    setSearchPerformed(true); 
     const loggedInUserName = sessionStorage.getItem("username");
     try {
       const response = await axios.get(
@@ -34,7 +33,7 @@ const SearchUsers = ({isCount,setIsCount}) => {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-          withCredentials: true, // For sending cookies with request if necessary
+          withCredentials: true, 
         }
       );
 
@@ -42,10 +41,10 @@ const SearchUsers = ({isCount,setIsCount}) => {
           (userStatus) => userStatus.user.name !== loggedInUserName
         );
 
-      setUsers(filteredUsers); // Set the response data to users state
+      setUsers(filteredUsers); 
     } catch (err) {
       console.error(err.message);
-      setUsers([]); // Clear results in case of an error
+      setUsers([]); 
     }
     setLoading(false);
   };
@@ -68,7 +67,6 @@ const SearchUsers = ({isCount,setIsCount}) => {
       setIsCount(isCount + 1);
       setUsers([]);
       alert("Friend request sent!");
-      //handleSearch(); // Refresh the search results
     } catch (err) {
       console.error(err.message);
       alert("Failed to send friend request.");
@@ -92,7 +90,7 @@ const SearchUsers = ({isCount,setIsCount}) => {
       setIsCount(isCount + 1);
       setUsers([]);
       alert("Unfriended successfully!");
-      //handleSearch(); // Refresh the search results
+     
       
     } catch (err) {
       console.error(err.message);

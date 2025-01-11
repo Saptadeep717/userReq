@@ -16,14 +16,14 @@ const LoginSignup = ({ setUser }) => {
       ? `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/login`
       : `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/signup`;
 
-    //const payload = { email, password, ...(name && { name }) };
     const payload = { password, ...(name && { name }) };
 
     try {
       const response = await axios.post(url, payload);
-      // Set data in sessionStorage
+      
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("username", response.data.user.name);
+      //sessionStorage.setItem("userId", response.data.user.id);
 
       setUser(response.data.user);
       navigate("/home"); 

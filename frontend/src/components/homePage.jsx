@@ -30,9 +30,9 @@ const HomePage = ({user}) => {
         `${import.meta.env.VITE_API_BASE_URL}/api/v1/friends`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Include Bearer token in the Authorization header
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`, 
           },
-          withCredentials: true, // Optional, depending on how you're handling cookies
+          withCredentials: true, 
         }
       );
       setFriends(getFriends.data.friends);
@@ -47,9 +47,9 @@ const HomePage = ({user}) => {
         `${import.meta.env.VITE_API_BASE_URL}/api/v1/recommendations`,
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Include Bearer token in the Authorization header
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`, 
           },
-          withCredentials: true, // Optional, depending on how you're handling cookies
+          withCredentials: true, 
         }
       );
       setRecommendedFriends(getRecommendedFriends.data);
@@ -78,13 +78,12 @@ const HomePage = ({user}) => {
   return (
     <div>
       <div className="home-container">
-        {/* {user && ( */}
         <>
           <h1 className="user-title">
             Welcome, {sessionStorage.getItem("username")}
           </h1>
           <SearchUsers isCount={isCount} setIsCount={setIsCount} />
-          <UpdateProfile />
+
           <PendingRequests
             requests={pendingRequests}
             isCount={isCount}
@@ -101,8 +100,8 @@ const HomePage = ({user}) => {
             isCount={isCount}
             setIsCount={setIsCount}
           />
+          <UpdateProfile />
         </>
-        {/* )} */}
       </div>
     </div>
   );

@@ -19,9 +19,9 @@ const UpdateProfile = () => {
         { location, interests },
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Include Bearer token in the Authorization header
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-          withCredentials: true, // Optional, depending on how you're handling cookies
+          withCredentials: true, 
         }
       );
       alert("Profile Updated");
@@ -55,7 +55,6 @@ const UpdateProfile = () => {
         </button>
         <div className="interests-list">
           {interests?.map((interest, idx) => (
-            // <span key={idx}>{interest}</span>
             <div class="badge-container">
               <div class="badge">
                 {interest}
